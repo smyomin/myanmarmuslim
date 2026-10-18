@@ -1,0 +1,8 @@
+# Prevent directory listing
+Options -Indexes
+
+# Block access to sensitive files
+<Files "auth.php">
+    Order Allow,Deny
+    Deny from all
+</Files>

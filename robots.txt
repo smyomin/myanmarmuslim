@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /api/
+Disallow: /uploads/
+Disallow: /vendor/
+
+# Sitemap
+Sitemap: https://www.myanmarmuslim.org/sitemap.php
+
+# Crawl delay
+Crawl-delay: 10

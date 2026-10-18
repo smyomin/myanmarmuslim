@@ -1,0 +1,30 @@
+Options -Indexes
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "\.(sql|log|env|ini|sh|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Block access to includes folder directly
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/ - [F,L]
+</IfModule>
+
+# Prevent access to config files
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Book short URLs
+RewriteRule ^b/([0-9]+)/?$ b.php?id=$1 [L,QSA]

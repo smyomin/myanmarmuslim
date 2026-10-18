@@ -1,0 +1,303 @@
+/* =============================================
+   MYANMAR MUSLIMS - THEME SYSTEM
+   ============================================= */
+
+/* DEFAULT - Islamic Green */
+[data-theme="default"] {
+    --color-primary:       #1a6b3c;
+    --color-primary-dark:  #0f4a28;
+    --color-primary-light: #2d9e5f;
+    --color-gold:          #c9a84c;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #f9fafb;
+    --color-card:          #ffffff;
+    --color-text:          #1f2937;
+    --color-text-muted:    #6b7280;
+    --color-border:        #e5e7eb;
+    --color-topbar-bg:     #0f4a28;
+    --color-nav-bg:        #ffffff;
+    --color-hero-bg:       #1a6b3c;
+    --color-hero-text:     #ffffff;
+    --color-footer-bg:     #0f4a28;
+    --color-footer-text:   #d1fae5;
+    --color-section-alt:   #f3f4f6;
+}
+
+/* RAMADAN - Gold & Warm */
+[data-theme="ramadan"] {
+    --color-primary:       #b8860b;
+    --color-primary-dark:  #8b6508;
+    --color-primary-light: #daa520;
+    --color-gold:          #ffd700;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #fffbf0;
+    --color-card:          #fffdf5;
+    --color-text:          #2d1a00;
+    --color-text-muted:    #7a5c00;
+    --color-border:        #f0e0b0;
+    --color-topbar-bg:     #1a0a00;
+    --color-nav-bg:        #fffdf5;
+    --color-hero-bg:       #1a0a00;
+    --color-hero-text:     #ffd700;
+    --color-footer-bg:     #1a0a00;
+    --color-footer-text:   #ffd700;
+    --color-section-alt:   #fff8e1;
+}
+
+/* MUHARRAM - Dark & Solemn */
+[data-theme="muharram"] {
+    --color-primary:       #888888;
+    --color-primary-dark:  #555555;
+    --color-primary-light: #aaaaaa;
+    --color-gold:          #8b7355;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #121212;
+    --color-card:          #1e1e1e;
+    --color-text:          #e5e5e5;
+    --color-text-muted:    #9ca3af;
+    --color-border:        #333333;
+    --color-topbar-bg:     #000000;
+    --color-nav-bg:        #1a1a1a;
+    --color-hero-bg:       #000000;
+    --color-hero-text:     #cccccc;
+    --color-footer-bg:     #000000;
+    --color-footer-text:   #888888;
+    --color-section-alt:   #1a1a1a;
+}
+
+/* RABI - Spring Teal */
+[data-theme="rabi"] {
+    --color-primary:       #0d9488;
+    --color-primary-dark:  #0a7c72;
+    --color-primary-light: #14b8a6;
+    --color-gold:          #f59e0b;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #f0fdfa;
+    --color-card:          #ffffff;
+    --color-text:          #134e4a;
+    --color-text-muted:    #4a7c78;
+    --color-border:        #ccfbf1;
+    --color-topbar-bg:     #0a4a44;
+    --color-nav-bg:        #ffffff;
+    --color-hero-bg:       #0d9488;
+    --color-hero-text:     #ffffff;
+    --color-footer-bg:     #0a4a44;
+    --color-footer-text:   #ccfbf1;
+    --color-section-alt:   #e6fffa;
+}
+
+/* DHUL HIJJAH - Earth Brown */
+[data-theme="dhulhijjah"] {
+    --color-primary:       #92400e;
+    --color-primary-dark:  #6b2d09;
+    --color-primary-light: #b45309;
+    --color-gold:          #d97706;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #fdf6ec;
+    --color-card:          #fffaf3;
+    --color-text:          #3b1a08;
+    --color-text-muted:    #78350f;
+    --color-border:        #fde68a;
+    --color-topbar-bg:     #3b1a08;
+    --color-nav-bg:        #fffaf3;
+    --color-hero-bg:       #451a03;
+    --color-hero-text:     #fde68a;
+    --color-footer-bg:     #3b1a08;
+    --color-footer-text:   #fde68a;
+    --color-section-alt:   #fef3c7;
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+    --color-primary:       #34d399;
+    --color-primary-dark:  #10b981;
+    --color-primary-light: #6ee7b7;
+    --color-gold:          #fbbf24;
+    --color-gold-dark:     #a08a3c;
+    --color-bg:            #111827;
+    --color-card:          #1f2937;
+    --color-text:          #f9fafb;
+    --color-text-muted:    #9ca3af;
+    --color-border:        #374151;
+    --color-topbar-bg:     #030712;
+    --color-nav-bg:        #1f2937;
+    --color-hero-bg:       #064e3b;
+    --color-hero-text:     #ffffff;
+    --color-footer-bg:     #030712;
+    --color-footer-text:   #9ca3af;
+    --color-section-alt:   #111827;
+}
+
+/* =============================================
+   GLOBAL ELEMENT STYLES USING VARIABLES
+   ============================================= */
+
+* { transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease; }
+
+body {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+}
+
+/* Topbar */
+.site-topbar {
+    background-color: var(--color-topbar-bg) !important;
+}
+
+/* Nav */
+.site-nav {
+    background-color: var(--color-nav-bg) !important;
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Hero */
+.hero-pattern,
+.hero-section {
+    background-color: var(--color-hero-bg) !important;
+    color: var(--color-hero-text) !important;
+}
+
+/* Footer */
+footer.site-footer {
+    background-color: var(--color-footer-bg) !important;
+    color: var(--color-footer-text) !important;
+}
+
+/* =============================================
+   OVERRIDE TAILWIND CLASSES WITH CSS VARS
+   ============================================= */
+
+/* White backgrounds → card color */
+.bg-white {
+    background-color: var(--color-card) !important;
+}
+
+/* Gray backgrounds → alt section */
+.bg-gray-50 {
+    background-color: var(--color-section-alt) !important;
+}
+
+.bg-gray-100 {
+    background-color: var(--color-section-alt) !important;
+}
+
+/* Text colors */
+.text-gray-900,
+.text-gray-800 {
+    color: var(--color-text) !important;
+}
+
+.text-gray-700,
+.text-gray-600 {
+    color: var(--color-text) !important;
+}
+
+.text-gray-500,
+.text-gray-400 {
+    color: var(--color-text-muted) !important;
+}
+
+/* Borders */
+.border-gray-100,
+.border-gray-200,
+.border-gray-300 {
+    border-color: var(--color-border) !important;
+}
+
+/* Dividers */
+.divide-gray-100 > * + *,
+.divide-y > * + * {
+    border-color: var(--color-border) !important;
+}
+
+/* Primary color overrides */
+.bg-primary,
+.bg-primary-dark {
+    background-color: var(--color-primary) !important;
+}
+
+.hover\:bg-primary-dark:hover {
+    background-color: var(--color-primary-dark) !important;
+}
+
+.text-primary {
+    color: var(--color-primary) !important;
+}
+
+.border-primary {
+    border-color: var(--color-primary) !important;
+}
+
+/* Gold color */
+.text-gold {
+    color: var(--color-gold) !important;
+}
+
+.bg-gold {
+    background-color: var(--color-gold) !important;
+}
+
+.text-gold-dark {
+    color: var(--color-gold-dark) !important;
+}
+
+.bg-gold-dark {
+    background-color: var(--color-gold-dark) !important;
+}
+
+/* Green tints */
+.bg-green-50 {
+    background-color: var(--color-section-alt) !important;
+}
+
+.hover\:bg-green-50:hover {
+    background-color: var(--color-section-alt) !important;
+}
+
+/* Input fields */
+input, textarea, select {
+    background-color: var(--color-card) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-muted) !important;
+}
+
+/* Cards and shadows */
+.shadow-sm, .shadow-md {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15) !important;
+}
+
+/* Page header sections (green banners on library, news etc) */
+.bg-primary.text-white.py-12 {
+    background-color: var(--color-hero-bg) !important;
+    color: var(--color-hero-text) !important;
+}
+
+/* Rounded category cards */
+.rounded-xl.overflow-hidden.shadow-sm {
+    background-color: var(--color-card) !important;
+    border-color: var(--color-border) !important;
+}
+
+/* Subscribe section */
+.bg-primary.py-16 {
+    background-color: var(--color-hero-bg) !important;
+}
+
+/* Line clamp text color fix */
+.line-clamp-2, .line-clamp-3 {
+    color: var(--color-text) !important;
+}
+
+/* Blue buttons stay blue */
+.bg-blue-600, .bg-blue-500 {
+    background-color: #2563eb !important;
+}
+
+.bg-red-500 {
+    background-color: #ef4444 !important;
+}
