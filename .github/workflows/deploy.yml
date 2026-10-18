@@ -30,6 +30,7 @@ jobs:
             **/.github/**
             **/MyanmarMuslimApp/**
             **/shiacemetery/**
+            **/resources/**
             .env
             .env.*
             *.log

@@ -6,6 +6,7 @@ uploads/wallpapers/
 vendor/
 MyanmarMuslimApp/
 shiacemetery/
+resources/
 *.log
 error_log
 .DS_Store
