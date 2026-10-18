@@ -1,0 +1,12 @@
+includes/config.php
+uploads/books/
+uploads/covers/
+uploads/news/
+uploads/wallpapers/
+vendor/
+MyanmarMuslimApp/
+shiacemetery/
+*.log
+error_log
+.DS_Store
+Thumbs.db
