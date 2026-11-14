@@ -447,6 +447,12 @@ $recentSubs = $pdo->query("SELECT email, created_at, is_subscriber
 
     </main>
 </div>
-
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/admin/sw.js', { scope: '/admin/' });
+    });
+}
+</script>
 </body>
 </html>
