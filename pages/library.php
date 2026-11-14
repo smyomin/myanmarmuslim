@@ -215,6 +215,7 @@ include '../includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
+            <?php include '../includes/links-widget.php'; ?>
         </aside>
 
         <!-- Books Grid -->
