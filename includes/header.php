@@ -65,6 +65,8 @@ $themes      = getThemes();
         .card-hover { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
     </style>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 </head>
 <body class="transition-colors duration-300" style="background-color: var(--color-bg); color: var(--color-text);">
 

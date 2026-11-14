@@ -1,0 +1,17 @@
+{
+  "name": "Myanmar Muslims Admin",
+  "short_name": "MM Admin",
+  "description": "Admin panel for Myanmar Muslims Islamic Library",
+  "start_url": "/admin/dashboard.php",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#111827",
+  "theme_color": "#1a6b3c",
+  "lang": "en",
+  "icons": [
+    { "src": "/assets/icons/admin-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/admin-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/icons/admin-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -75,8 +75,7 @@ function generateSEO($options = []) {
     <meta name="apple-mobile-web-app-title" content="<?= SITE_NAME ?>">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="<?= SITE_URL ?>/assets/images/favicon.png">
-    <link rel="apple-touch-icon"      href="<?= SITE_URL ?>/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="<?= SITE_URL ?>/assets/icons/icon-192.png">
 
     <?php if ($jsonLd): ?>
     <!-- Structured Data -->
