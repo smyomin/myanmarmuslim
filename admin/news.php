@@ -9,10 +9,23 @@ if (isset($_GET['delete'])) {
     $article->execute([$id]);
     $articleData = $article->fetch();
 
-    if ($articleData) {
+        if ($articleData) {
+        // Delete the cover image file
         if ($articleData['cover_image'] && file_exists(UPLOAD_PATH . 'news/' . $articleData['cover_image'])) {
             unlink(UPLOAD_PATH . 'news/' . $articleData['cover_image']);
         }
+
+        // Delete all gallery photo files (read the names BEFORE the article row is deleted)
+        $gStmt = $pdo->prepare("SELECT image FROM news_images WHERE news_id = ?");
+        $gStmt->execute([$id]);
+        foreach ($gStmt->fetchAll(PDO::FETCH_COLUMN) as $imgName) {
+            $imgPath = UPLOAD_PATH . 'news/' . $imgName;
+            if (is_file($imgPath)) {
+                unlink($imgPath);
+            }
+        }
+
+        // Deleting the article also removes its news_images rows (ON DELETE CASCADE)
         $pdo->prepare("DELETE FROM news WHERE id = ?")->execute([$id]);
     }
     header('Location: news.php?deleted=1');
