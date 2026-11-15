@@ -16,6 +16,23 @@ if (!$article) {
     exit;
 }
 
+// Delete a single gallery photo
+if (isset($_GET['delete_img'])) {
+    $imgId = (int)$_GET['delete_img'];
+    $s = $pdo->prepare("SELECT image FROM news_images WHERE id = ? AND news_id = ?");
+    $s->execute([$imgId, $id]);
+    $row = $s->fetch();
+    if ($row) {
+        $path = UPLOAD_PATH . 'news/' . $row['image'];
+        if (is_file($path)) {
+            unlink($path);
+        }
+        $pdo->prepare("DELETE FROM news_images WHERE id = ?")->execute([$imgId]);
+    }
+    header('Location: edit-news.php?id=' . $id . '&img_deleted=1');
+    exit;
+}
+
 $success = '';
 $error   = '';
 
@@ -50,13 +67,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$error) {
             $stmt = $pdo->prepare("UPDATE news SET title=?, content=?, cover_image=?, is_published=? WHERE id=?");
             $stmt->execute([$title, $content, $coverName, $is_published, $id]);
+            $gallery = saveNewsGallery($pdo, $id, $_FILES['gallery'] ?? []);
+
             $success = 'Article updated successfully!';
+            if ($gallery['saved'] > 0) {
+                $success .= ' ' . $gallery['saved'] . ' photo(s) added.';
+            }
+            if ($gallery['skipped'] > 0) {
+                $success .= ' ' . $gallery['skipped'] . ' photo(s) skipped (wrong type, over 5MB, or gallery full).';
+            }
+
             $stmt = $pdo->prepare("SELECT * FROM news WHERE id = ?");
             $stmt->execute([$id]);
             $article = $stmt->fetch();
         }
     }
 }
+
+$galleryStmt = $pdo->prepare("SELECT id, image FROM news_images WHERE news_id = ? ORDER BY sort_order ASC, id ASC");
+$galleryStmt->execute([$id]);
+$galleryList = $galleryStmt->fetchAll();
+$remaining   = max(0, 15 - count($galleryList));
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -194,6 +226,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <!-- Gallery Photos -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Gallery Photos
+                        <span class="text-gray-400 font-normal">(<?= count($galleryList) ?> / 15)</span>
+                    </label>
+
+                    <?php if (isset($_GET['img_deleted'])): ?>
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg mb-3 text-sm">
+                        <i class="fas fa-check-circle mr-1"></i>Photo deleted.
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($galleryList)): ?>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-3 mb-4">
+                        <?php foreach ($galleryList as $g): ?>
+                        <div class="relative">
+                            <img src="<?= UPLOAD_URL ?>news/<?= clean($g['image']) ?>"
+                                class="h-24 w-full object-cover rounded-lg border border-gray-200">
+                            <a href="edit-news.php?id=<?= $id ?>&delete_img=<?= $g['id'] ?>"
+                            onclick="return confirm('ဒီဓာတ်ပုံကို ဖျက်မလား?')"
+                            class="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                            title="Delete photo">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($remaining > 0): ?>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-primary transition">
+                        <input type="file" name="gallery[]" id="galleryInput"
+                            accept=".jpg,.jpeg,.png,.webp" multiple
+                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                        <p id="galleryInfo" class="text-xs text-gray-500 mt-2">
+                            ထပ်ထည့်လို့ရတာ <?= $remaining ?> ပုံ
+                        </p>
+                        <div id="galleryPreview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2"></div>
+                    </div>
+                    <?php else: ?>
+                    <p class="text-sm text-gray-500">ဓာတ်ပုံ ၁၅ ပုံ ပြည့်ပါပြီ။ ထပ်ထည့်ချင်ရင် တချို့ကို အရင်ဖျက်ပါ။</p>
+                    <?php endif; ?>
+                </div>
+
                 <!-- Published -->
                 <div class="flex items-center gap-3">
                     <input type="checkbox" name="is_published" id="is_published" value="1"
@@ -234,6 +311,28 @@ document.querySelector('input[name="cover_image"]').addEventListener('change', f
     }
 });
 </script>
-
+<?php if ($remaining > 0): ?>
+<script>
+document.getElementById('galleryInput').addEventListener('change', function () {
+    const max = <?= (int)$remaining ?>;
+    const preview = document.getElementById('galleryPreview');
+    const info = document.getElementById('galleryInfo');
+    preview.innerHTML = '';
+    if (this.files.length > max) {
+        alert('ထပ်ထည့်လို့ရတာ ' + max + ' ပုံပဲ ရှိပါတယ်။');
+        this.value = '';
+        info.textContent = 'ထပ်ထည့်လို့ရတာ ' + max + ' ပုံ';
+        return;
+    }
+    info.textContent = this.files.length ? this.files.length + ' ပုံ ရွေးထားပါတယ်' : 'ထပ်ထည့်လို့ရတာ ' + max + ' ပုံ';
+    Array.from(this.files).forEach(function (file) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'h-20 w-full object-cover rounded-lg border border-gray-200';
+        preview.appendChild(img);
+    });
+});
+</script>
+<?php endif; ?>
 </body>
 </html>
