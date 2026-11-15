@@ -26,8 +26,18 @@ if (!file_exists($filePath)) {
 }
 
 // Force download
+// Build a safe file name that keeps Myanmar text
+$safeTitle = preg_replace('/[\\\\\/:*?"<>|\r\n]+/u', '', $book['title']);
+$safeTitle = trim(mb_substr($safeTitle, 0, 80));
+if ($safeTitle === '') {
+    $safeTitle = 'book';
+}
+$asciiName = 'book-' . (int)$book['id'] . '.pdf';   // fallback for very old browsers
+$utf8Name  = rawurlencode($safeTitle . '.pdf');
+
+// Force download
 header('Content-Type: application/pdf');
-header('Content-Disposition: attachment; filename="' . $book['title'] . '.pdf"');
+header("Content-Disposition: attachment; filename=\"$asciiName\"; filename*=UTF-8''$utf8Name");
 header('Content-Length: ' . filesize($filePath));
 header('Cache-Control: no-cache');
 readfile($filePath);
