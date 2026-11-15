@@ -6,7 +6,7 @@ $pageTitle = 'Contact Us';
 $success   = '';
 $error     = '';
 
-require_once '../includes/mailer.php';
+//require_once '../includes/mailer.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name    = trim($_POST['name'] ?? '');
@@ -140,65 +140,17 @@ include '../includes/header.php';
             </div>
         </div>
 
-        <!-- Contact Form -->
+        <!-- Get in touch -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
-                <h2 class="text-xl font-bold text-gray-800 mb-6">Send us a Message</h2>
-
-                <?php if ($success): ?>
-                <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-4 rounded-lg mb-6">
-                    <i class="fas fa-check-circle mr-2"></i><?= clean($success) ?>
-                </div>
-                <?php endif; ?>
-
-                <?php if ($error): ?>
-                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-4 rounded-lg mb-6">
-                    <i class="fas fa-exclamation-circle mr-2"></i><?= clean($error) ?>
-                </div>
-                <?php endif; ?>
-
-                <form method="POST" class="space-y-4">
-                    <?php csrfField(); ?>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Your Name <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" name="name"
-                                   value="<?= clean($_POST['name'] ?? '') ?>"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"
-                                   placeholder="Enter your name" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Email Address <span class="text-red-500">*</span>
-                            </label>
-                            <input type="email" name="email"
-                                   value="<?= clean($_POST['email'] ?? '') ?>"
-                                   class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"
-                                   placeholder="Enter your email" required>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                        <input type="text" name="subject"
-                               value="<?= clean($_POST['subject'] ?? '') ?>"
-                               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary"
-                               placeholder="What is this about?">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Message <span class="text-red-500">*</span>
-                        </label>
-                        <textarea name="message" rows="6" required
-                                  class="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary resize-none"
-                                  placeholder="Write your message here..."><?= clean($_POST['message'] ?? '') ?></textarea>
-                    </div>
-                    <button type="submit"
-                            class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-lg transition">
-                        <i class="fas fa-paper-plane mr-2"></i>Send Message
-                    </button>
-                </form>
+            <div class="rounded-xl shadow-sm p-6 md:p-8"
+                style="background: var(--color-card); border: 1px solid var(--color-border)">
+                <h2 class="text-xl font-bold mb-3" style="color: var(--color-text)">
+                    Reach Us
+                </h2>
+                <p class="text-sm leading-relaxed" style="color: var(--color-text-muted)">
+                    For questions, feedback or book requests, please contact us through
+                    our social media pages or by email. We reply within 24-48 hours, In sha Allah.
+                </p>
             </div>
         </div>
     </div>
