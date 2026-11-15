@@ -25,6 +25,11 @@ $related = $pdo->prepare("SELECT * FROM news WHERE is_published = 1
 $related->execute([$article['id']]);
 $relatedArticles = $related->fetchAll();
 
+// Gallery photos
+$galleryStmt = $pdo->prepare("SELECT image FROM news_images WHERE news_id = ? ORDER BY sort_order ASC, id ASC");
+$galleryStmt->execute([$article['id']]);
+$galleryImages = $galleryStmt->fetchAll(PDO::FETCH_COLUMN);
+
 require_once '../includes/seo.php';
 $articleUrl = SITE_URL . '/pages/news-detail.php?id=' . $article['id'];
 $seoOptions = [
@@ -72,6 +77,34 @@ include '../includes/header.php';
                     <?= nl2br(clean($article['content'])) ?>
                 </div>
             </div>
+
+            <!-- Photo Gallery -->
+            <?php if (!empty($galleryImages)): ?>
+            <div class="mt-6 rounded-xl shadow-sm p-5"
+                style="background: var(--color-card); border: 1px solid var(--color-border)">
+                <h3 class="text-sm font-bold uppercase tracking-wide mb-4"
+                    style="color: var(--color-text)">
+                    <i class="fas fa-images mr-2" style="color: var(--color-gold)"></i>
+                    ဓာတ်ပုံများ (<?= count($galleryImages) ?>)
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <?php foreach ($galleryImages as $i => $img): ?>
+                    <button type="button" onclick="openLightbox(<?= $i ?>)"
+                            class="block overflow-hidden rounded-lg"
+                            style="border: 1px solid var(--color-border); padding: 0; background: none; cursor: zoom-in;">
+                        <img src="<?= UPLOAD_URL ?>news/<?= clean($img) ?>"
+                            alt="<?= clean($article['title']) ?> - <?= $i + 1 ?>"
+                            loading="lazy"
+                            class="w-full object-cover"
+                            style="height: 130px; transition: transform 0.2s;"
+                            onmouseover="this.style.transform='scale(1.05)'"
+                            onmouseout="this.style.transform='scale(1)'">
+                    </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
 
            <!-- Share -->
             <div class="mt-6 bg-white rounded-xl shadow-sm p-5"
@@ -195,5 +228,84 @@ include '../includes/header.php';
         </aside>
     </div>
 </div>
+
+<?php if (!empty($galleryImages)): ?>
+<!-- Lightbox -->
+<div id="lightbox"
+     style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.92);
+            align-items:center; justify-content:center;"
+     onclick="if(event.target === this) closeLightbox()">
+
+    <button onclick="closeLightbox()" aria-label="Close"
+            style="position:absolute; top:14px; right:18px; color:#fff; background:none; border:0;
+                   font-size:34px; cursor:pointer; line-height:1;">&times;</button>
+
+    <button onclick="stepLightbox(-1)" aria-label="Previous"
+            style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#fff;
+                   background:rgba(255,255,255,0.15); border:0; width:44px; height:44px;
+                   border-radius:50%; font-size:20px; cursor:pointer;">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <img id="lightboxImg" src="" alt=""
+         style="max-width:92vw; max-height:84vh; object-fit:contain; border-radius:8px;">
+
+    <button onclick="stepLightbox(1)" aria-label="Next"
+            style="position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#fff;
+                   background:rgba(255,255,255,0.15); border:0; width:44px; height:44px;
+                   border-radius:50%; font-size:20px; cursor:pointer;">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <div id="lightboxCounter"
+         style="position:absolute; bottom:18px; left:0; right:0; text-align:center;
+                color:rgba(255,255,255,0.85); font-size:14px;"></div>
+</div>
+
+<script>
+const galleryUrls = <?= json_encode(array_map(function ($f) {
+    return UPLOAD_URL . 'news/' . $f;
+}, $galleryImages)) ?>;
+let lbIndex = 0;
+
+function showLightbox() {
+    document.getElementById('lightboxImg').src = galleryUrls[lbIndex];
+    document.getElementById('lightboxCounter').textContent = (lbIndex + 1) + ' / ' + galleryUrls.length;
+}
+
+function openLightbox(i) {
+    lbIndex = i;
+    showLightbox();
+    document.getElementById('lightbox').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function stepLightbox(d) {
+    lbIndex = (lbIndex + d + galleryUrls.length) % galleryUrls.length;
+    showLightbox();
+}
+
+document.addEventListener('keydown', function (e) {
+    if (document.getElementById('lightbox').style.display !== 'flex') return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowRight') stepLightbox(1);
+    if (e.key === 'ArrowLeft')  stepLightbox(-1);
+});
+
+// Swipe on phones
+let touchX = 0;
+const lb = document.getElementById('lightbox');
+lb.addEventListener('touchstart', function (e) { touchX = e.changedTouches[0].clientX; }, { passive: true });
+lb.addEventListener('touchend', function (e) {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) stepLightbox(dx < 0 ? 1 : -1);
+}, { passive: true });
+</script>
+<?php endif; ?>
 
 <?php include '../includes/footer.php'; ?>
