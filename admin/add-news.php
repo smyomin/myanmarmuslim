@@ -43,7 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO news (title, slug, content, cover_image, is_published) 
                                    VALUES (?, ?, ?, ?, ?)");
             $stmt->execute([$title, $slug, $content, $coverName, $is_published]);
+            $newsId = $pdo->lastInsertId();
+            $gallery = saveNewsGallery($pdo, $newsId, $_FILES['gallery'] ?? []);
             $success = 'News article published successfully!';
+            if ($gallery['saved'] > 0) {
+                $success .= ' ' . $gallery['saved'] . ' photo(s) uploaded.';
+            }
+            if ($gallery['skipped'] > 0) {
+                $success .= ' ' . $gallery['skipped'] . ' photo(s) skipped (wrong type, over 5MB, or more than 15).';
+            }
         }
     }
 }
@@ -177,6 +185,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                              class="h-40 object-cover rounded-lg border border-gray-200">
                     </div>
                 </div>
+                <!-- Gallery Photos -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Gallery Photos <span class="text-gray-400 font-normal">(optional, up to 15)</span>
+                    </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-primary transition">
+                        <input type="file" name="gallery[]" id="galleryInput"
+                            accept=".jpg,.jpeg,.png,.webp" multiple
+                            class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                        <p id="galleryInfo" class="text-xs text-gray-500 mt-2"></p>
+                        <div id="galleryPreview" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-2"></div>
+                    </div>
+                </div>
 
                 <!-- Published -->
                 <div class="flex items-center gap-3">
@@ -216,6 +237,26 @@ document.querySelector('input[name="cover_image"]').addEventListener('change', f
     }
 });
 </script>
-
+<script>
+document.getElementById('galleryInput').addEventListener('change', function () {
+    const max = 15;
+    const preview = document.getElementById('galleryPreview');
+    const info = document.getElementById('galleryInfo');
+    preview.innerHTML = '';
+    if (this.files.length > max) {
+        alert('ဓာတ်ပုံ ' + max + ' ပုံထက် မများရပါ။');
+        this.value = '';
+        info.textContent = '';
+        return;
+    }
+    info.textContent = this.files.length ? this.files.length + ' ပုံ ရွေးထားပါတယ်' : '';
+    Array.from(this.files).forEach(function (file) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.className = 'h-20 w-full object-cover rounded-lg border border-gray-200';
+        preview.appendChild(img);
+    });
+});
+</script>
 </body>
 </html>

@@ -169,3 +169,44 @@ function getYoutubeId($url) {
     }
     return null;
 }
+
+// Save multiple gallery images for a news article (max 15 per article)
+function saveNewsGallery($pdo, $newsId, $files, $maxTotal = 15) {
+    $result = ['saved' => 0, 'skipped' => 0];
+    if (empty($files['name'][0])) return $result;
+
+    $count = $pdo->prepare("SELECT COUNT(*) FROM news_images WHERE news_id = ?");
+    $count->execute([$newsId]);
+    $room = $maxTotal - (int)$count->fetchColumn();
+
+    $maxSort = $pdo->prepare("SELECT COALESCE(MAX(sort_order), 0) FROM news_images WHERE news_id = ?");
+    $maxSort->execute([$newsId]);
+    $sort = (int)$maxSort->fetchColumn();
+
+    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+    $insert  = $pdo->prepare("INSERT INTO news_images (news_id, image, sort_order) VALUES (?, ?, ?)");
+
+    foreach ($files['name'] as $i => $name) {
+        if ($name === '') continue;
+        if ($files['error'][$i] !== UPLOAD_ERR_OK || $result['saved'] >= $room) {
+            $result['skipped']++;
+            continue;
+        }
+        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if (!in_array($ext, $allowed)
+            || $files['size'][$i] > 5 * 1024 * 1024
+            || !@getimagesize($files['tmp_name'][$i])) {
+            $result['skipped']++;
+            continue;
+        }
+        $newName = time() . '_g' . $newsId . '_' . $i . '_' . bin2hex(random_bytes(3)) . '.' . $ext;
+        if (move_uploaded_file($files['tmp_name'][$i], UPLOAD_PATH . 'news/' . $newName)) {
+            $sort++;
+            $insert->execute([$newsId, $newName, $sort]);
+            $result['saved']++;
+        } else {
+            $result['skipped']++;
+        }
+    }
+    return $result;
+}
