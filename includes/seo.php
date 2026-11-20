@@ -30,8 +30,11 @@ function generateSEO($options = []) {
         $description = substr($description, 0, 157) . '...';
     }
 
-    // Clean URL
-    $url = strtok($url, '?');
+    // Clean URL: only strip the query string from an auto-detected URL,
+    // never from a URL the page passed in on purpose
+    if (!isset($options['url'])) {
+        $url = strtok($url, '?');
+    }
     $url = rtrim($url, '/');
 
     ob_start();
@@ -51,8 +54,6 @@ function generateSEO($options = []) {
     <meta property="og:title"       content="<?= htmlspecialchars($fullTitle) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($description) ?>">
     <meta property="og:image"       content="<?= htmlspecialchars($image) ?>">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height"content="630">
     <meta property="og:url"         content="<?= htmlspecialchars($url) ?>">
     <meta property="og:site_name"   content="<?= SITE_NAME ?>">
     <meta property="og:locale"      content="<?= SEO_SITE_LOCALE ?>">
